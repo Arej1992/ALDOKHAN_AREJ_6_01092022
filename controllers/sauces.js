@@ -1,6 +1,6 @@
 // in controllers/sauces.js
 
-const Sauces = require('../models/thing');
+const Sauces = require('../models/sauces');
 const fs = require('fs');
 
 
@@ -44,7 +44,7 @@ exports.getOnesauces = async (req, res, next) => {
 
 
 
-//suppression un thing
+//suppression un sauce
 exports.deletesauces = (req, res, next) => {
   Sauces.deleteOne({_id: req.params.id}).then(
     () => {
@@ -99,4 +99,55 @@ exports.getAllsauces = async (req, res, next) => {
       };
 
 
+//*************like/dislike************ */
+exports.likeDislikeSauce = (req, res, next) => {
+  const vote = req.body.like;
+  switch (vote) {
+      //l'utilisateur aime : on ajoute son id au tableau et on incrémente les likes
+      case 1:
+        Sauces.updateOne({ _id: req.params.id }, {
+                  $inc: { likes: +1 },
+                  $push: { usersLiked: req.body.userId }
+              })
+              .then(() => res.status(201).json({ message: "like ajouté" }))
+              .catch(error => res.status(500).json({ message: "like erreur :" + error }))
+          break;
 
+          //l'utilisateur n'aime pas : on ajoute son id au tableau et on incrémente les likes
+      case -1:
+        Sauces.updateOne({ _id: req.params.id }, {
+                  $push: { usersDisliked: req.body.userId },
+                  $inc: { dislikes: +1 }
+              })
+              .then(() => res.status(201).json({ message: "dislike est ajouté" }))
+              .catch(error => res.status(500).json({ message: "disliked erreur" + error }))
+          break;
+
+          //l'utilisateur annule son choix : on retire l'utilisateur du tableau et on désincrémente les likes ou dislikes suivant le tableau dans lequel il se trouvait
+      case 0:
+        Sauces.findOne({ _id: req.params.id })
+              .then(sauce => {
+                  if (sauce.usersLiked.includes(req.body.userId)) {
+                    Sauces.updateOne({ _id: req.params.id }, {
+                              $pull: { usersLiked: req.body.userId },
+                              $inc: { likes: -1 }
+                          })
+                          .then(() => res.status(201).json({ message: "like a été retiré !" }))
+                          .catch(error => res.status(500).json({ message: "like a été retiré ! erreur" + error }))
+                  } else {
+                    Sauces.updateOne({ _id: req.params.id }, {
+                              $pull: { usersDisliked: req.body.userId },
+                              $inc: { dislikes: -1 }
+                          })
+                          .then(() => res.status(201).json({ message: "disliked a été retiré !" }))
+                          .catch(error => res.status(500).json({ message: "disliked a été retiré erreur !" + error }))
+                  }
+
+              })
+              .catch(error => res.status(500).json({ message: "eureur  " + error }))
+          break;
+
+      default:
+          console.log(req.body)
+  }
+};

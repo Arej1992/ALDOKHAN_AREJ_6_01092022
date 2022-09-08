@@ -10,12 +10,6 @@ const saucesRoutes = require('./router/sauces');
 
 
 
-//  mongoose.connect('mongodb+srv://:@cluster0.mongodb.net/test?retryWrites=true&w=majority',
-//   { useNewUrlParser: true,
-//     useUnifiedTopology: true })
-//   .then(() => console.log('Connexion à MongoDB réussie !'))
-//   .catch((err) => console.log('Connexion à MongoDB échouée !' , err));
-
 mongoose
   .connect(
    "mongodb+srv://UserHotTakes:FfCBNMfJdfmhgGfq@cluster0.3vdwegh.mongodb.net/HotTakes?retryWrites=true&w=majority" ,  
