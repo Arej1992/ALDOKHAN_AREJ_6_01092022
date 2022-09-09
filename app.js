@@ -3,16 +3,16 @@ const app = express();
 // const bodyParser = require ("body-Parser");
 const mongoose = require("mongoose");
 const path = require('path');
-
+const helmet = require('helmet')
 const userRoutes = require('./router/user');
 const saucesRoutes = require('./router/sauces');
 
-
+require("dotenv").config()
 
 
 mongoose
   .connect(
-   "mongodb+srv://UserHotTakes:FfCBNMfJdfmhgGfq@cluster0.3vdwegh.mongodb.net/HotTakes?retryWrites=true&w=majority" ,  
+    process.env.db,
    { 
       useNewUrlParser: true,
       useUnifiedTopology: true 
@@ -38,11 +38,12 @@ app.use((req, res, next) => {
 });
 
 
-
-
 app.use(express.json());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.use(helmet());
+
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', saucesRoutes);
 
