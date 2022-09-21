@@ -1,6 +1,6 @@
 
 
-//téléchargement images
+//téléchargement images dans le site
 
 const multer = require('multer');
 

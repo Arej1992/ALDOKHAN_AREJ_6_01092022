@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-// const bodyParser = require ("body-Parser");
 const mongoose = require("mongoose");
 const path = require('path');
 const helmet = require('helmet')
@@ -9,7 +8,7 @@ const saucesRoutes = require('./router/sauces');
 
 require("dotenv").config()
 
-
+//Connection avec db
 mongoose
   .connect(
     process.env.db,
@@ -22,8 +21,7 @@ mongoose
 
 
 
-
-
+  //lie entre frontend+backend++accès sur les data
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); //* ca veut dire accessible pour tout le monde.
   res.setHeader(
