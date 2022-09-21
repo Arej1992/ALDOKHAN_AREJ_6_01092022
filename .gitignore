@@ -1,3 +1,7 @@
 /node_module
 .env
+<<<<<<< HEAD
 /images/
+=======
+/images/
+>>>>>>> a5b10cc2906e95ba5e55b957df7823aebd48b2c0
